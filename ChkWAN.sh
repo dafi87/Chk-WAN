@@ -589,6 +589,15 @@ else
 	echo -e ${cBRED}$aBLINK"\a\n\n\t"
 	Say "Rebooting..... (Action="$ACTION")"
 	echo -e "\n\t\t**********Rebooting**********\n\n"$cBGRE
+
+	if [ "$(echo $@ | grep -cw 'logrebootexternal')" -gt 0 ];then
+		EXTERNAL_URL="$(echo "$@" | sed -n "s/^.*logrebootexternal=//p" | awk '{print $1}')"
+		echo -en $cBWHT
+		Say "logging to external... calling: " $EXTERNAL_URL 
+		echo -e $cRESET
+		CURL_EXTERNAL_LOG=$(curl --connect-timeout 5 -s "$EXTERNAL_URL")
+	fi
+
 	service start_reboot							# Default REBOOT
 fi
 
